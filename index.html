@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<script src="matops.js"></script>
+</head>
+<body>
+<div style="width: 100%; display: flex; justify-content: space-around;">
+<canvas id="original_matrix" width="320" height="240" style="border:10px solid red;"></canvas>
+<canvas id="output_matrix"  width="320" height="240" style="border:10px solid green;"></canvas>
+
+<script>
+
+
+var url = "https://cdn.allwallpaper.in/wallpapers/320x240/12332/hd-3d-abstract-320x240-wallpaper.jpg";
+
+
+
+var m;
+setTimeout(100, function(){ m = rgbaToMat(c); );
+
+//
+// run tests and timing
+//
+
+var k = [[0.04, 0.04, 0.04, 0.04, 0.04],
+        [0.04, 0.04, 0.04, 0.04, 0.04],
+        [0.04, 0.04, 0.04, 0.04, 0.04],
+        [0.04, 0.04, 0.04, 0.04, 0.04],
+        [0.04, 0.04, 0.04, 0.04, 0.04]];
+
+var t0 = new Date();
+for(var it = 0; it < 1; it++){
+    var mk = convolve(m, k);
+}
+
+var t1 = new Date();
+console.log((t1.getTime() - t0.getTime())/1000 + " s");
+
+
+//
+// display final matrix
+//
+
+var c = document.getElementById("output_matrix");
+var ctx = c.getContext("2d");
+
+var out = ctx.createImageData(320, 240);
+for(var j = 0; j < 240; j++){
+    var row = j*320;
+    
+    for(var i = 0; i < 320*4; i++){
+        var col = i*4;
+        
+        out.data[col+row] = m[j][i];
+        out.data[col+row+1] = m[j][i];
+        out.data[col+row+2] = m[j][i];
+        out.data[col+row+3] = 255;
+    }
+}
+ctx.putImageData(out, 0, 0);
+
+</script>
+</div>
+</body>
+</html>
