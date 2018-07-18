@@ -4,10 +4,52 @@ from matplotlib import pyplot as plt
 import sys
 import time
 
+def convex_hull(pts):
+    """
+    computes and returns the convex hull of a set of data points.
+    
+    returns: a list of points on the hull counter-clockwise from the left-most point
+    """
+    
+    # sort the elements by their x-value to increase speed of next step and also
+    # get the left-most point, which is the starting point
+    xsort = sorted(pts, key=lambda p: p[0])
+    xind = 0
+    pi = xsort[xind]
+    
+    # compute the half-hull going to the right (increasing x-value)
+    # this is where sorting gives a speed-up because we only need to 
+    # evaluate the angle "in front" of the last point pi.
+    hull = [pi]
+    while xind < len(xsort)-1:
+        thsort = sorted(xsort[xind+1:], key=
+                        lambda pj: np.pi + np.arctan2(pj[1]-pi[1],  pj[0]-pi[0]))
+        pi = thsort[0]
+        xind = xsort.index(pi)
+        hull.append(pi)
+    
+    # once we reach the right-most point, we repeat the process for decreasing x
+    while xind > 0:
+        thsort = sorted(xsort[:xind], key=
+                        lambda pj: np.pi + np.arctan2(pi[1]-pj[1],  pi[0]-pj[0]))
+        pi = thsort[0]
+        xind = xsort.index(pi)
+        hull.append(pi)
+    
+    return hull     # note:     hull[0] == hull[-1] 
+
+
 def triarea(x1, y1, x2, y2, x3, y3):
+    """
+    computes the area of a triangle defined by the passed points
+    """
     return abs((x2-x1)*(y3-y1) - (x3-x1)*(y2-y1))/2
 
+
 def trilen(x1, y1, x2, y2, x3, y3):
+    """
+    computes the maximum square distance between any two of a triangle's points
+    """
     return max((x2-x1)**2 + (y2-y1)**2,
             (x3-x2)**2 + (y3-y2)**2,
             (x1-x3)**2 + (y1-y3)**2)
